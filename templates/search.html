@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<section class="search-results">
+    <h1 class="heading">Search Results</h1>
+    <p class="search-info">
+        {% if query %}
+            Found {{ total_results }} result{{ total_results|pluralize }} for "{{ query }}"
+        {% else %}
+            Enter a search term above
+        {% endif %}
+    </p>
+
+    {% if courses %}
+    <div class="section">
+        <h2 class="sub-heading">Courses</h2>
+        <div class="box-container">
+            {% for course in courses %}
+            <div class="box">
+                <div class="tutor">
+                    <img src="{{ course.course_tutor.profile_pic.url }}" alt="" />
+                    <div class="info">
+                        <h3>{{ course.course_tutor.user.get_full_name }}</h3>
+                        <span>{{ course.created_at|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+                <div class="thumb">
+                    <img src="{{ course.course_image.url }}" alt="" />
+                    <span>{{ course.materials.count }} videos</span>
+                </div>
+                <h3 class="title">{{ course.course_name }}</h3>
+                <p class="description">{{ course.course_description|truncatechars:100 }}</p>
+                <a href="{% url 'playlist' course.id %}" class="inline-btn">view playlist</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if videos %}
+    <div class="section">
+        <h2 class="sub-heading">Videos</h2>
+        <div class="box-container">
+            {% for video in videos %}
+            <div class="box">
+                <div class="tutor">
+                    <img src="{{ video.course.course_tutor.profile_pic.url }}" alt="" />
+                    <div class="info">
+                        <h3>{{ video.course.course_tutor.user.get_full_name }}</h3>
+                        <span>{{ video.created_at|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+                <a href="{% url 'watch-video' video.id %}" class="video-link">
+                    <div class="thumb">
+                        <img src="{{ video.thumbnail.url }}" alt="">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <h3 class="title">{{ video.title }}</h3>
+                </a>
+                <p class="description">{{ video.description|truncatechars:100 }}</p>
+                <a href="{% url 'playlist' video.course.id %}" class="inline-btn">view playlist</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not courses and not videos and query %}
+    <div class="empty">
+        <p>No results found for "{{ query }}"</p>
+        <a href="{% url 'courses' %}" class="inline-btn">browse all courses</a>
+    </div>
+    {% endif %}
+</section>
+
+<style>
+.search-results {
+    padding: 2rem;
+}
+
+.search-info {
+    text-align: center;
+    font-size: 1.6rem;
+    color: var(--light-color);
+    margin-bottom: 3rem;
+}
+
+.section {
+    margin-bottom: 4rem;
+}
+
+.sub-heading {
+    font-size: 2rem;
+    color: var(--black);
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+    border-left: 4px solid var(--main-color);
+}
+
+.box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.box {
+    background: var(--white);
+    border-radius: 1rem;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.box .tutor {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.box .tutor img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.box .tutor .info h3 {
+    font-size: 1.8rem;
+    color: var(--black);
+}
+
+.box .tutor .info span {
+    color: var(--light-color);
+    font-size: 1.4rem;
+}
+
+.box .thumb {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.box .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.box .thumb span,
+.box .thumb i {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0,0,0,0.8);
+    color: var(--white);
+    padding: 0.5rem 1.5rem;
+    border-radius: 5rem;
+    font-size: 1.4rem;
+}
+
+.box .thumb i {
+    left: 50%;
+    top: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    padding: 0;
+    opacity: 0;
+    transition: 0.2s linear;
+}
+
+.box .video-link:hover .thumb i {
+    opacity: 1;
+}
+
+.box .title {
+    font-size: 2rem;
+    color: var(--black);
+    margin-bottom: 1rem;
+}
+
+.box .description {
+    font-size: 1.4rem;
+    color: var(--light-color);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.box .inline-btn {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    background: var(--main-color);
+    color: var(--white);
+    border-radius: 5rem;
+    font-size: 1.4rem;
+    transition: 0.2s linear;
+}
+
+.box .inline-btn:hover {
+    background: var(--main-color-dark);
+}
+
+.box .video-link {
+    display: block;
+    text-decoration: none;
+    color: var(--black);
+    transition: 0.2s linear;
+}
+
+.box .video-link:hover {
+    transform: translateY(-0.5rem);
+}
+
+.empty {
+    text-align: center;
+    font-size: 1.6rem;
+    color: var(--light-color);
+    margin-top: 3rem;
+}
+
+.empty a {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    background: var(--main-color);
+    color: var(--white);
+    border-radius: 5rem;
+    font-size: 1.4rem;
+    transition: 0.2s linear;
+    margin-top: 1rem;
+}
+
+.empty a:hover {
+    background: var(--main-color-dark);
+}
+</style>
+{% endblock %} 

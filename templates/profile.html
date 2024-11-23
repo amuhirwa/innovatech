@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+    <section class="user-profile">
+      <h1 class="heading">your profile</h1>
+
+      <div class="info">
+        <div class="user">
+          {% if user.student.profile_pic %}
+            <img src="{{ user.student.profile_pic.url }}" alt="Profile Picture">
+          {% else %}
+            <img src="{% static 'images/Keys.png' %}" alt="Default Profile">
+          {% endif %}
+          <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+          <p>{{ user.student.role|default:"learner" }}</p>
+          <a href="{% url 'update_profile' %}" class="inline-btn">update profile</a>
+        </div>
+
+        <div class="box-container">
+          <div class="box">
+            <div class="flex">
+              <i class="fas fa-bookmark"></i>
+              <div>
+                <span>{{ saved_playlists_count }}</span>
+                <p>saved playlist</p>
+              </div>
+            </div>
+            <a href="{% url 'saved_playlists' %}" class="inline-btn">view playlists</a>
+          </div>
+
+          <div class="box">
+            <div class="flex">
+              <i class="fas fa-heart"></i>
+              <div>
+                <span>{{ liked_videos_count }}</span>
+                <p>videos liked</p>
+              </div>
+            </div>
+            <a href="{% url 'liked_videos' %}" class="inline-btn">view liked</a>
+          </div>
+
+          <div class="box">
+            <div class="flex">
+              <i class="fas fa-comment"></i>
+              <div>
+                <span>{{ comments_count }}</span>
+                <p>videos comments</p>
+              </div>
+            </div>
+            <a href="{% url 'user_comments' %}" class="inline-btn">view comments</a>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Saved Courses{% endblock %}
+
+{% block content %}
+<section class="saved-courses">
+    <h1 class="heading">Saved Courses</h1>
+
+    <div class="box-container">
+        {% for course in saved_courses %}
+        <div class="box">
+            <div class="image">
+                <img src="{{ course.course_image.url }}" alt="">
+                <div class="icons">
+                    <a href="{% url 'playlist' course.id %}" class="fas fa-play"></a>
+                    <button onclick="saveCourse(this, '{{ course.id }}')" class="fas fa-bookmark saved"></button>
+                </div>
+            </div>
+            <div class="content">
+                <h3>{{ course.course_name }}</h3>
+                <div class="tutor">
+                    <img src="{{ course.course_tutor.profile_pic.url }}" alt="">
+                    <div>
+                        <h3>{{ course.course_tutor.user.get_full_name }}</h3>
+                        <span>Tutor</span>
+                    </div>
+                </div>
+                <div class="details">
+                    <div class="info">
+                        <i class="fas fa-video"></i>
+                        <span>{{ course.materials.count }} videos</span>
+                    </div>
+                    <div class="info">
+                        <i class="fas fa-bookmark"></i>
+                        <span>{{ course.saved_by.count }} saves</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty">
+            <img src="{% static 'images/empty.svg' %}" alt="No saved courses">
+            <h3>No Saved Courses Yet</h3>
+            <p>Browse our courses and save the ones you're interested in!</p>
+            <a href="{% url 'courses' %}" class="btn">Browse Courses</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<style>
+.saved-courses {
+    padding: 2rem;
+}
+
+.box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.box {
+    background: var(--white);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.box .image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.box .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.box .image .icons {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.box .image .icons a,
+.box .image .icons button {
+    width: 4.5rem;
+    height: 4.5rem;
+    line-height: 4.5rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    font-size: 2rem;
+    color: var(--main-color);
+    cursor: pointer;
+    border: none;
+}
+
+.box .content {
+    padding: 2rem;
+}
+
+.box .content h3 {
+    font-size: 2rem;
+    color: var(--black);
+    margin-bottom: 1.5rem;
+}
+
+.box .content .tutor {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.box .content .tutor img {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.box .content .tutor h3 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.box .content .tutor span {
+    color: var(--light-color);
+    font-size: 1.4rem;
+}
+
+.box .content .details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.box .content .details .info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.4rem;
+    color: var(--light-color);
+}
+
+.box .content .details .info i {
+    color: var(--main-color);
+}
+
+.empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+}
+
+.empty img {
+    max-width: 300px;
+    margin-bottom: 2rem;
+}
+
+.empty h3 {
+    font-size: 2.5rem;
+    color: var(--black);
+    margin-bottom: 1rem;
+}
+
+.empty p {
+    font-size: 1.6rem;
+    color: var(--light-color);
+    margin-bottom: 2rem;
+}
+</style>
+{% endblock %} 

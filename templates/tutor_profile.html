@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ tutor.user.get_full_name }} - Profile{% endblock %}
+
+{% block content %}
+<section class="tutor-profile">
+    <h1 class="heading">Tutor Profile</h1>
+
+    <div class="profile-details">
+        <div class="tutor-info">
+            <img src="{{ tutor.profile_pic.url }}" alt="{{ tutor.user.get_full_name }}" class="profile-pic">
+            <h2>{{ tutor.user.get_full_name }}</h2>
+            <p class="join-date">Member since {{ tutor.user.date_joined|date:"F Y" }}</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <i class="fas fa-graduation-cap"></i>
+                <div class="stat-details">
+                    <span class="stat-value">{{ courses.count }}</span>
+                    <span class="stat-label">Courses</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <div class="stat-details">
+                    <span class="stat-value">{{ tutor.courses.all|length }}</span>
+                    <span class="stat-label">Students</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="tutor-courses">
+        <h2 class="sub-heading">Courses by {{ tutor.user.first_name }}</h2>
+
+        <div class="box-container">
+            {% for course in courses %}
+            <div class="box">
+                <div class="thumb">
+                    <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" />
+                    <span>{{ course.materials.count }} videos</span>
+                </div>
+                <h3 class="title">{{ course.course_name }}</h3>
+                <a href="{% url 'playlist' course.id %}" class="inline-btn">view playlist</a>
+            </div>
+            {% empty %}
+            <p class="empty">No courses available yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+</section>
+
+<style>
+.tutor-profile {
+    padding: 2rem;
+}
+
+.profile-details {
+    background: var(--white);
+    padding: 3rem;
+    border-radius: 1rem;
+    margin-bottom: 3rem;
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.tutor-info {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+.profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 2rem;
+}
+
+.tutor-info h2 {
+    font-size: 2.5rem;
+    color: var(--black);
+    margin-bottom: 1rem;
+}
+
+.join-date {
+    color: var(--light-color);
+    font-size: 1.4rem;
+}
+
+.stats {
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 2rem;
+    background: var(--light-bg);
+    border-radius: 1rem;
+    min-width: 150px;
+}
+
+.stat-item i {
+    font-size: 3rem;
+    color: var(--main-color);
+    margin-bottom: 1rem;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2.5rem;
+    color: var(--black);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--light-color);
+    font-size: 1.4rem;
+}
+
+.sub-heading {
+    font-size: 2.5rem;
+    color: var(--black);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.box {
+    background: var(--white);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+.thumb {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.thumb img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.thumb span {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0,0,0,0.8);
+    color: var(--white);
+    padding: 0.5rem 1.5rem;
+    border-radius: 5rem;
+    font-size: 1.4rem;
+}
+
+.title {
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 1.5rem;
+}
+
+.empty {
+    text-align: center;
+    color: var(--light-color);
+    font-size: 1.6rem;
+    grid-column: 1 / -1;
+    padding: 3rem;
+}
+
+@media (max-width: 768px) {
+    .profile-details {
+        padding: 2rem;
+    }
+    
+    .stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+    }
+}
+</style>
+{% endblock %} 

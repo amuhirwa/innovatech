@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Saved Playlists{% endblock %}
+{% block content %}
+<section class="courses">
+  <h1 class="heading">Saved Playlists</h1>
+
+  {% if saved_courses %}
+    <div class="box-container">
+      {% for course in saved_courses %}
+      <div class="box">
+        <div class="tutor">
+          <img src="{{course.course_tutor.profile_pic}}" alt="" />
+          <div class="info">
+            <h3>{{course.course_tutor}}</h3>
+            <span>{{course.created_at}}</span>
+          </div>
+        </div>
+        <div class="thumb">
+          <img src="{{course.course_image}}" alt="" />
+          <span>{{course.materials.all|length}} Videos</span>
+        </div>
+        <h3 class="title">{{course.course_name}}</h3>
+        <form action="" method="post" class="save-playlist">
+          <button type="button" onclick='save_course(this, "{% url 'save_course' %}", "{{student.id}}", "{{course.id}}")' name="save_list" class="saved">
+            <i class="far fa-bookmark"></i> <span>Saved</span>
+          {% csrf_token %}
+          </button>
+        </form>
+        <a href="{% url 'playlist' course.id %}" class="inline-btn">view playlist</a>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty">
+      <p>No saved playlists found!</p>
+      <a href="{% url 'courses' %}" class="inline-btn">browse courses</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %} 

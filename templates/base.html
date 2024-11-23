@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Innovatech CodingHub's aim is perfectly aligned with the professionalism and we would value your skills in this area of expertise."
+    />
+    <meta name="keywords" content="HTML, CSS and JavaScript" />
+    <meta name="An Author" content="Innovatech CodingHub" />
+    <title>{% block title %}My Site{% endblock %}</title>
+    <!--Favicon-->
+    <link rel="shortcut icon" href={% static "images/INNOVATECH CODINGHUB.jpg"
+    %} type="image/x-icon">
+    <!-- font awesome cdn link  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+    />
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href={% static "css/style.css" %} />
+  </head>
+  <body {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}style="padding-left: 0;"{% endif %}>
+    <header class="header">
+      <section class="flex">
+        <a href="{% url 'home' %}" class="logo" class="icons"
+          ><img src={% static "images/INNOVATECH CODINGHUB.jpg" %}
+          class="logo-image" alt=""></a
+        >
+
+        <form action="{% url 'search' %}" method="GET" class="search-form">
+          <input
+            type="text"
+            name="query"
+            required
+            placeholder="search courses..."
+            maxlength="100"
+            value="{{ request.GET.query }}"
+          />
+          <button type="submit" class="fas fa-search"></button>
+        </form>
+
+        <div class="icons">
+          <div id="menu-btn" class="fas fa-bars"></div>
+          <div id="search-btn" class="fas fa-search"></div>
+          <div id="user-btn" class="fas fa-user"></div>
+          <div id="toggle-btn" class="fas fa-sun"></div>
+        </div>
+
+        <div class="profile">
+          <img src={% static "images/Keys.png" %} class="image" alt="">
+          <h3 class="name">{{student.user.first_name}} {{student.user.last_name}}</h3>
+          <p class="role">learner</p>
+          <a href="{% url "profile" %}" class="btn">view profile</a>
+          <div class="flex-btn">
+            {% if user.is_authenticated %}
+              <a href="{% url 'logout' %}" class="option-btn">logout</a>
+            {% else %}
+              <a href="{% url 'login' %}" class="option-btn">login</a>
+              <a href="{% url 'register' %}" class="option-btn">register</a>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+    </header>
+
+    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %}
+    <div class="side-bar">
+      <div id="close-btn">
+        <i class="fas fa-times"></i>
+      </div>
+
+      <div class="profile">
+        <img src={% static "images/Keys.png" %} class="image" alt="">
+        <h3 class="name">{{student.user.first_name}} {{student.user.last_name}}</h3>
+        <p class="role">learner</p>
+        <a href="{% url "profile" %}" class="btn">view profile</a>
+      </div>
+
+      <nav class="navbar">
+        <a href="{% url 'home' %}"
+          ><i class="fas fa-home"></i><span>Home</span></a
+        >
+        <a href="{% url "about" %}"
+          ><i class="fas fa-question"></i><span>About Us</span></a
+        >
+        <a href="{% url "courses" %}"
+          ><i class="fas fa-graduation-cap"></i><span>Courses</span></a
+        >
+        <a href="{% url "tutors" %}"
+          ><i class="fas fa-chalkboard-user"></i><span>Tutors</span></a
+        >
+        <a href="{% url "contact" %}"
+          ><i class="fas fa-headset"></i><span>Contact us</span></a
+        >
+      </nav>
+    </div>
+    {% endif %}
+
+    {% block content %} {% endblock %}
+
+    <script src={% static "js/script.js" %}></script>
+
+  </body>
+</html>

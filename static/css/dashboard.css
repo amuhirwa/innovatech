@@ -1,0 +1,191 @@
+html {
+    font-size: 16px;
+}
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Sidebar Styles */
+.dashboard-sidebar {
+    width: 280px;
+    background-color: #fff;
+    border-right: 1px solid #e9ecef;
+    padding: 2rem;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 2rem;
+}
+
+.profile-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+    color: #6c757d;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background-color: var(--main-color);
+    color: #fff;
+}
+
+/* Main Content */
+.dashboard-main {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 0.5rem;
+    width: 300px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    margin-left: 1rem;
+    width: 100%;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-icon.students { background-color: #e3f2fd; color: #1976d2; }
+.stat-icon.courses { background-color: #e8f5e9; color: #388e3c; }
+.stat-icon.videos { background-color: #fff3e0; color: #f57c00; }
+.stat-icon.engagement { background-color: #fce4ec; color: #c2185b; }
+
+/* Courses Grid */
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.course-card {
+    background-color: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+}
+
+.course-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.course-info {
+    padding: 1.5rem;
+}
+
+/* Comments List */
+.comments-list {
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.comment-card {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .dashboard-sidebar {
+        width: 80px;
+        padding: 1rem;
+    }
+    
+    .sidebar-header .tutor-info,
+    .sidebar-nav span {
+        display: none;
+    }
+    
+    .dashboard-main {
+        margin-left: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .dashboard-sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
+    
+    .dashboard-main {
+        margin-left: 0;
+    }
+}

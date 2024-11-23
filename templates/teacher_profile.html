@@ -1,0 +1,46 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Home{% endblock %}
+{% block content %}
+    <section class="courses">
+      <h1 class="heading">Innovatech CodingHub courses</h1>
+
+      <div class="box-container">
+        <div class="box">
+          <div class="thumb">
+            <img src={% static "images/thumb-1.png" %} alt="" />
+            <span>10 videos</span>
+          </div>
+          <h3 class="title">Complete HTML tutorial</h3>
+          <a href="{% url 'playlist' %}" class="inline-btn">view playlist</a>
+        </div>
+
+        <div class="box">
+          <div class="thumb">
+            <img src={% static "images/thumb-2.png" %} alt="" />
+            <span>10 videos</span>
+          </div>
+          <h3 class="title">Complete CSS tutorial</h3>
+          <a href="{% url 'playlist' %}" class="inline-btn">view playlist</a>
+        </div>
+
+        <div class="box">
+          <div class="thumb">
+            <img src={% static "images/thumb-3.png" %} alt="" />
+            <span>10 videos</span>
+          </div>
+          <h3 class="title">Complete javascript tutorial</h3>
+          <a href="{% url 'playlist' %}" class="inline-btn">view playlist</a>
+        </div>
+
+        <div class="box">
+          <div class="thumb">
+            <img src={% static "images/thumb-4.png" %} alt="" />
+            <span>10 videos</span>
+          </div>
+          <h3 class="title">Complete Boostrap tutorial</h3>
+          <a href="{% url 'playlist' %}" class="inline-btn">view playlist</a>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
+{% endblock %}

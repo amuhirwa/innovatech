@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Comments{% endblock %}
+{% block content %}
+<section class="comments">
+    <h1 class="heading">My Comments</h1>
+
+    {% if user_comments %}
+        <div class="box-container">
+            {% for comment in user_comments %}
+            <div class="box">
+                <div class="tutor">
+                    <div class="info">
+                        <h3>{{ comment.course_material.title }}</h3>
+                        <span>{{ comment.added_at|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+                <p class="comment-text">{{ comment.comment }}</p>
+                <div class="flex-btn">
+                    <a href="{% url 'watch-video' comment.course_material.id %}" class="inline-btn">view video</a>
+                    <a href="{% url 'playlist' comment.course_material.course.id %}" class="inline-btn">view playlist</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty">
+            <p>No comments found!</p>
+            <a href="{% url 'courses' %}" class="inline-btn">browse courses</a>
+        </div>
+    {% endif %}
+</section>
+
+<style>
+.comments {
+    padding: 2rem;
+}
+
+.box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.box {
+    background: var(--white);
+    border-radius: 1rem;
+    padding: 2rem;
+}
+
+.box .tutor {
+    margin-bottom: 1.5rem;
+}
+
+.box .tutor .info h3 {
+    font-size: 1.8rem;
+    color: var(--black);
+}
+
+.box .tutor .info span {
+    color: var(--light-color);
+    font-size: 1.4rem;
+}
+
+.box .comment-text {
+    font-size: 1.6rem;
+    color: var(--light-color);
+    line-height: 1.5;
+    margin-bottom: 2rem;
+}
+
+.flex-btn {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.empty {
+    text-align: center;
+    padding: 2rem;
+}
+
+.empty p {
+    font-size: 1.8rem;
+    color: var(--light-color);
+    margin-bottom: 2rem;
+}
+</style>
+{% endblock %} 

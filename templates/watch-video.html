@@ -1,0 +1,106 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Video{% endblock %}
+{% block content %}
+
+<section class="watch-video">
+  <div class="video-container">
+    <div class="video">
+      <video
+        src="{{video.video.url}}"
+        controls
+        poster="{{video.video.url}}"
+        id="video"
+      ></video>
+    </div>
+    <h3 class="title">{{video.title}}</h3>
+    <div class="info">
+      <p class="date">
+        <i class="fas fa-calendar"></i><span>{{video.created_at}}</span>
+      </p>
+      <p class="date">
+        <i class="fas fa-heart"></i><span>{{video.likes}} likes</span>
+      </p>
+    </div>
+    <div class="tutor">
+      <img src={% static "images/Keys.png" %} alt="">
+      <div>
+        <h3>{{video.course.course_tutor}}</h3>
+        <span>Tutor</span>
+      </div>
+    </div>
+    <form action="{% url 'like_video' video.id %}" method="post" class="flex">
+      {% csrf_token %}
+      <a href="{% url 'playlist' video.course.id %}" class="inline-btn"
+        >view playlist</a
+      >
+      <button>{% if video in student.liked_videos.all %}<i class="fas fa-heart">{% else %}<i class="far fa-heart">{% endif %}</i><span>like</span></button>
+    </form>
+    <p class="description">{{video.description}}</p>
+  </div>
+</section>
+
+<section class="comments">
+  <h1 class="heading">
+    {{video.comments.all|length}} {% if video.comments.all|length == 1%}
+    comment{% else %}comments{% endif %}
+  </h1>
+
+  <form
+    action="{% url 'watch-video' video.id %}"
+    method="POST"
+    class="add-comment"
+  >
+    {% csrf_token %}
+    <h3>add comments</h3>
+    <textarea
+      name="comment-box"
+      placeholder="enter your comment"
+      required
+      maxlength="1000"
+      cols="30"
+      rows="10"
+    ></textarea>
+    <input
+      type="submit"
+      value="add comment"
+      class="inline-btn"
+      name="add_comment"
+    />
+  </form>
+
+  <h1 class="heading">user comments</h1>
+
+  <div class="box-container">
+    {% for comment in video.comments.all %}
+    <div class="box">
+      <div class="user">
+        <img src={% static "images/ok-2.jpg" %} alt="">
+        <div>
+          <h3>{{comment.student}}</h3>
+          <span>{{comment.added_at}}</span>
+        </div>
+      </div>
+      <div class="comment-box">{{comment.comment}}</div>
+      {% if comment.student.user == user %}
+      <div class="flex-btn">
+      <form action="" class="flex-btn">
+        <input
+          type="submit"
+          value="edit comment"
+          name="edit_comment"
+          class="inline-option-btn"
+        />
+      </form>
+      <form action="{% url 'delete_comment' comment.id %}" class="flex-btn">
+        <input
+          type="submit"
+          value="delete comment"
+          name="delete_comment"
+          class="inline-delete-btn"
+        />
+      </form>
+    </div>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Liked Videos{% endblock %}
+{% block content %}
+<section class="playlist-videos">
+    <h1 class="heading">Liked Videos</h1>
+
+    {% if liked_videos %}
+        <div class="box-container">
+            {% for video in liked_videos %}
+            <div class="box">
+                <div class="tutor">
+                    <div>
+                        <h3>{{ video.course.course_tutor }}</h3>
+                        <span>{{ video.created_at|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+                <a href="{% url 'watch-video' video.id %}" class="video-link">
+                    <div class="thumb">
+                        <img src="{{ video.thumbnail }}" alt="">
+                        <i class="fas fa-play" style="margin-top: 40px;"></i>
+                    </div>
+                    <h3 class="title">{{ video.title }}</h3>
+                </a>
+                <div class="flex-btn">
+                    <form action="" method="post" class="like-form">
+                        <button type="button" onclick='like_video(this, "{% url 'like_video' video.id %}")' class="like-btn liked">
+                            <span>Liked</span>
+                        </button>
+                        {% csrf_token %}
+                    </form>
+                    <a href="{% url 'playlist' video.course.id %}" class="inline-btn">view playlist</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty">
+            <p>No liked videos found!</p>
+            <a href="{% url 'courses' %}" class="inline-btn">browse courses</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %} 

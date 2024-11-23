@@ -1,0 +1,290 @@
+{% extends 'tutor_base.html' %}
+{% load static %}
+
+{% block dashboard_content %}
+<div class="analytics-container">
+    <!-- Course Performance -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <div class="header-content">
+                <h2>Course Performance</h2>
+                <p>Track your course metrics and engagement</p>
+            </div>
+            <div class="header-actions">
+                <select id="timeRange" class="time-filter">
+                    <option value="7">Last 7 days</option>
+                    <option value="30">Last 30 days</option>
+                    <option value="90">Last 3 months</option>
+                </select>
+            </div>
+        </div>
+        <div class="chart-container main-chart">
+            <canvas id="coursePerformanceChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Engagement Metrics -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-header">
+                <h3>Average Completion Rate</h3>
+                <span class="metric-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip">Average percentage of course completion across all students</span>
+                </span>
+            </div>
+            <div class="chart-container">
+                <canvas id="completionRateChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="metric-card">
+            <div class="metric-header">
+                <h3>Student Engagement</h3>
+                <span class="metric-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip">Daily active students and interaction metrics</span>
+                </span>
+            </div>
+            <div class="chart-container">
+                <canvas id="engagementChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="metric-card">
+            <div class="metric-header">
+                <h3>Popular Videos</h3>
+                <span class="metric-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip">Most viewed and liked course content</span>
+                </span>
+            </div>
+            <div class="popular-videos">
+                {% for video in popular_videos %}
+                <div class="video-stat">
+                    <div class="video-info">
+                        <i class="fas fa-play-circle"></i>
+                        <span class="video-title">{{ video.title }}</span>
+                    </div>
+                    <div class="stat-bars">
+                        <div class="stat-bar views">
+                            <div class="bar-label">
+                                <i class="fas fa-eye"></i>
+                                <span>{{ video.views }} views</span>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar" style="width: {{ video.views_percentage }}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-bar likes">
+                            <div class="bar-label">
+                                <i class="fas fa-heart"></i>
+                                <span>{{ video.likes }} likes</span>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar" style="width: {{ video.likes_percentage }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.analytics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.dashboard-section {
+    background: var(--white);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header-content h2 {
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 0.5rem;
+}
+
+.header-content p {
+    color: var(--light-color);
+    font-size: 1.1rem;
+}
+
+.time-filter {
+    padding: 0.8rem 1.5rem;
+    border: 1px solid var(--light-bg);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    color: var(--black);
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.time-filter:hover {
+    border-color: var(--main-color);
+}
+
+.main-chart {
+    height: 400px;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.metric-card {
+    background: var(--white);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.metric-header h3 {
+    font-size: 1.4rem;
+    color: var(--black);
+}
+
+.metric-info {
+    position: relative;
+    color: var(--light-color);
+    cursor: help;
+}
+
+.metric-info:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tooltip {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--black);
+    color: var(--white);
+    padding: 0.8rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.popular-videos {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.video-stat {
+    background: var(--light-bg);
+    border-radius: 0.8rem;
+    padding: 1.5rem;
+}
+
+.video-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.video-info i {
+    color: var(--main-color);
+    font-size: 1.2rem;
+}
+
+.video-title {
+    font-weight: 500;
+    color: var(--black);
+}
+
+.stat-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.stat-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.bar-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--light-color);
+    font-size: 0.9rem;
+}
+
+.bar-container {
+    height: 6px;
+    background: var(--white);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    border-radius: 1rem;
+    transition: width 0.3s ease;
+}
+
+.views .bar {
+    background: var(--main-color);
+}
+
+.likes .bar {
+    background: #ff4757;
+}
+
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .time-filter {
+        width: 100%;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/analytics.js' %}"></script>
+{% endblock %}
+{% endblock %} 

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Update Profile{% endblock %}
+{% block content %}
+<section class="form-container">
+    <h1 class="heading">update profile</h1>
+    
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="flex">
+            <div class="col">
+                <p>your name</p>
+                <input type="text" name="first_name" placeholder="first name" maxlength="50" 
+                    value="{{ user.first_name }}" class="box">
+                <input type="text" name="last_name" placeholder="last name" maxlength="50" 
+                    value="{{ user.last_name }}" class="box">
+                <p>your role</p>
+                <select name="role" class="box">
+                    <option value="learner" {% if user.student.role == 'learner' %}selected{% endif %}>learner</option>
+                    <option value="teacher" {% if user.student.role == 'teacher' %}selected{% endif %}>teacher</option>
+                </select>
+            </div>
+            <div class="col">
+                <p>your email</p>
+                <input type="email" name="email" placeholder="enter your email" maxlength="50" 
+                    value="{{ user.email }}" class="box">
+                <p>profile picture</p>
+                <input type="file" name="profile_pic" accept="image/*" class="box">
+                {% if user.student.profile_pic %}
+                    <img src="{{ user.student.profile_pic.url }}" alt="Current Profile Picture" class="current-pic">
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <input type="submit" value="update profile" name="submit" class="btn">
+        <a href="{% url 'profile' %}" class="delete-btn">go back</a>
+    </form>
+</section>
+{% endblock %} 

@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Playlist{% endblock %}
+{% block content %}
+<section class="playlist-details">
+    <h1 class="heading">Playlist Details</h1>
+
+    <div class="row">
+        <div class="column">
+            <form action="" method="post" class="save-playlist">
+                {% csrf_token %}
+                <div class="save-playlist">
+                    <button type="button" 
+                            class="save-btn {% if course in request.user.student.saved_courses.all %}saved{% endif %}"
+                            onclick="saveCourse(this, '{{ course.id }}')">
+                        <i class="far fa-bookmark"></i>
+                        <span>{% if course in request.user.student.saved_courses.all %}Saved{% else %}Save Course{% endif %}</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="thumb">
+                <img src="{{ course.course_image.url }}" alt="" />
+                <span>{{ playlist|length }} videos</span>
+            </div>
+        </div>
+        <div class="column">
+            <div class="tutor">
+                <img src="{{ course.course_tutor.profile_pic.url }}" alt="">
+                <div>
+                    <h3>{{ course.course_tutor }}</h3>
+                    <span>{{ course.created_at|date:"F d, Y" }}</span>
+                </div>
+            </div>
+
+            <div class="details">
+                <h3>{{ course.course_name }}</h3>
+                <p>{{ course.course_description }}</p>
+                <a href="{% url 'tutor_profile' course.course_tutor.id %}" class="inline-btn">View Profile</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="playlist-videos">
+    <h1 class="heading">Playlist Videos</h1>
+
+    <div class="box-container">
+        {% for video in playlist %}
+        <a class="box" href="{% url 'watch-video' video.id %}">
+            <i class="fas fa-play"></i>
+            <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" />
+            <h3>{{ video.title }}</h3>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<style>
+.playlist-details {
+    padding: 2rem;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.column {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+.thumb {
+    position: relative;
+    margin-top: 1.5rem;
+}
+
+.thumb img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.thumb span {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0,0,0,0.8);
+    color: var(--white);
+    padding: 0.5rem 1.5rem;
+    border-radius: 5rem;
+    font-size: 1.4rem;
+}
+
+.tutor {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.tutor img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.tutor h3 {
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 0.2rem;
+}
+
+.tutor span {
+    color: var(--light-color);
+    font-size: 1.4rem;
+}
+
+.details h3 {
+    font-size: 2rem;
+    color: var(--black);
+    margin-bottom: 1rem;
+}
+
+.details p {
+    color: var(--light-color);
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+}
+
+.save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.8rem;
+    font-size: 1.6rem;
+    cursor: pointer;
+    background: var(--light-bg);
+    color: var(--light-color);
+    transition: all 0.3s ease;
+}
+
+.save-btn.saved {
+    background: var(--main-color);
+    color: var(--white);
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.box {
+    position: relative;
+    background: var(--white);
+    border-radius: 1rem;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.box:hover {
+    transform: translateY(-5px);
+}
+
+.box img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.box i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: var(--white);
+    opacity: 0;
+    transition: 0.2s linear;
+}
+
+.box:hover i {
+    opacity: 1;
+}
+
+.box h3 {
+    font-size: 1.8rem;
+    color: var(--black);
+    padding: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+async function saveCourse(button, courseId) {
+    try {
+        const response = await fetch('/save-course/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                course: courseId
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            // Toggle button appearance
+            button.classList.toggle('saved');
+            const span = button.querySelector('span');
+            span.textContent = data.saved ? 'Saved' : 'Save Course';
+            
+            // Update icon
+            const icon = button.querySelector('i');
+            icon.classList.toggle('fas');
+            icon.classList.toggle('far');
+        } else {
+            alert(data.message || 'Error saving course');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error saving course');
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Courses{% endblock %}
+{% block content %}
+    <section class="courses">
+      <h1 class="heading">Our Courses</h1>
+
+      <div class="box-container">
+        {% for course in courses %}
+        <div class="box">
+          <div class="tutor">
+            <img src="{{course.course_tutor.profile_pic}}" alt="" />
+            <div class="info">
+              <h3>{{course.course_tutor}}</h3>
+              <span>{{course.created_at}}</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <img src="{{course.course_image}}" alt="" />
+            <span>{{course.materials.all|length}} Videos</span>
+          </div>
+          <h3 class="title">{{course.course_name}}</h3>
+          <a href="{% url 'playlist' course.id %}" class="inline-btn">view playlist</a>
+        </div>
+        {% endfor %}
+    
+      </div>
+    </section>
+{% endblock %}

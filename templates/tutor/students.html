@@ -1,0 +1,311 @@
+{% extends 'tutor_base.html' %}
+{% load static %}
+
+{% block dashboard_content %}
+<div class="dashboard-section">
+    <div class="section-header">
+        <div class="header-content">
+            <h2>Students Overview</h2>
+            <p>Manage and track student progress across all courses</p>
+        </div>
+        <div class="header-actions">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="studentSearch" placeholder="Search students...">
+            </div>
+            <select id="courseFilter" class="course-filter">
+                <option value="">All Courses</option>
+                {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.course_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div class="students-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>Enrolled Date</th>
+                    <th>Progress</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enrollment in enrollments %}
+                <tr>
+                    <td class="student-info">
+                        <img src="{{ enrollment.student.profile_pic.url }}" alt="{{ enrollment.student.user.get_full_name }}">
+                        <div>
+                            <h4>{{ enrollment.student.user.get_full_name }}</h4>
+                            <span>{{ enrollment.student.user.email }}</span>
+                        </div>
+                    </td>
+                    <td class="course-name">
+                        <span class="course-badge">{{ enrollment.course.course_name }}</span>
+                    </td>
+                    <td class="date">{{ enrollment.enrolled_date|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: {{ enrollment.progress }}%"></div>
+                            <span>{{ enrollment.progress }}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="{% url 'student_progress' enrollment.student.id enrollment.course.id %}" 
+                           class="btn-view" title="View Details">
+                            <i class="fas fa-eye"></i>
+                            <span>View Details</span>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.dashboard-section {
+    background: var(--white);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--light-bg);
+}
+
+.header-content h2 {
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 0.5rem;
+}
+
+.header-content p {
+    color: var(--light-color);
+    font-size: 1.1rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1.5rem;
+    background: var(--light-bg);
+    border-radius: 0.5rem;
+    min-width: 300px;
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+    color: var(--black);
+}
+
+.course-filter {
+    padding: 0.8rem 1.5rem;
+    border: 1px solid var(--light-bg);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    color: var(--black);
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.course-filter:hover {
+    border-color: var(--main-color);
+}
+
+.students-table {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.8rem;
+}
+
+th {
+    text-align: left;
+    padding: 1rem;
+    color: var(--light-color);
+    font-weight: 500;
+    background: var(--light-bg);
+    &:first-child { border-radius: 0.5rem 0 0 0.5rem; }
+    &:last-child { border-radius: 0 0.5rem 0.5rem 0; }
+}
+
+td {
+    padding: 1rem;
+    background: var(--light-bg);
+    &:first-child { border-radius: 0.5rem 0 0 0.5rem; }
+    &:last-child { border-radius: 0 0.5rem 0.5rem 0; }
+}
+
+tr {
+    transition: transform 0.3s ease;
+}
+
+tr:hover {
+    transform: translateX(5px);
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.student-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.student-info h4 {
+    color: var(--black);
+    margin-bottom: 0.3rem;
+}
+
+.student-info span {
+    color: var(--light-color);
+    font-size: 0.9rem;
+}
+
+.course-badge {
+    padding: 0.5rem 1rem;
+    background: rgba(var(--main-color-rgb), 0.1);
+    color: var(--main-color);
+    border-radius: 2rem;
+    font-size: 0.9rem;
+}
+
+.progress-bar {
+    width: 150px;
+    height: 8px;
+    background: var(--white);
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress {
+    height: 100%;
+    background: var(--main-color);
+    border-radius: 1rem;
+    transition: width 0.3s ease;
+}
+
+.progress-bar span {
+    position: absolute;
+    right: 0;
+    top: -18px;
+    font-size: 0.9rem;
+    color: var(--main-color);
+}
+
+.btn-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--white);
+    color: var(--main-color);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-view:hover {
+    background: var(--main-color);
+    color: var(--white);
+}
+
+@media (max-width: 1024px) {
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .header-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .search-bar {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    .course-filter {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .students-table {
+        font-size: 0.9rem;
+    }
+    
+    td, th {
+        padding: 0.8rem;
+    }
+    
+    .btn-view span {
+        display: none;
+    }
+}
+</style>
+
+<script>
+document.getElementById('studentSearch').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        const studentName = row.querySelector('.student-info h4').textContent.toLowerCase();
+        const studentEmail = row.querySelector('.student-info span').textContent.toLowerCase();
+        
+        if (studentName.includes(searchTerm) || studentEmail.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+document.getElementById('courseFilter').addEventListener('change', function(e) {
+    const courseId = e.target.value;
+    const rows = document.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        if (!courseId || row.querySelector('.course-name').dataset.courseId === courseId) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %} 

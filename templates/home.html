@@ -1,0 +1,86 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Home{% endblock %}
+{% block content %}
+<section class="home-grid">
+  <h1 class="heading">quick options</h1>
+
+  <div class="box-container">
+    <div class="box">
+      <h3 class="title">likes and comments</h3>
+      <p class="likes">total likes : <span>{{student.liked_videos.all|length}}</span></p>
+      <a href="{% url 'liked_videos' %}" class="inline-btn">view likes</a>
+      <p class="likes">
+        total comments : <span>{{student.comments.all|length}}</span>
+      </p>
+      <a href="{% url 'user_comments' %}" class="inline-btn">view comments</a>
+      <p class="likes">
+        saved playlists : <span>{{student.saved_courses.all|length}}</span>
+      </p>
+      <a href="{% url 'saved_playlists' %}" class="inline-btn">view playlists</a>
+    </div>
+
+    <div class="box">
+      <h3 class="title">top categories</h3>
+      <div class="flex">
+        <a href="#"
+          ><i class="fas fa-code"></i><span>Development Courses</span></a
+        >
+        <a href="#"><i class="fas fa-pen"></i><span>UI/UX Design</span></a>
+        <a href="#"><i class="fas fa-camera"></i><span>Photography</span></a>
+        <a href="#"><i class="fas fa-cog"></i><span>Software</span></a>
+        <a href="#"><i class="fas fa-cog"></i><span>Data Analysis</span></a>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3 class="title">popular topics</h3>
+      <div class="flex">
+        <a href="#"><i class="fab fa-html5"></i><span>HTML</span></a>
+        <a href="#"><i class="fab fa-css3"></i><span>CSS</span></a>
+        <a href="#"><i class="fab fa-js"></i><span>Javascript</span></a>
+        <a href="#"><i class="fab fa-react"></i><span>React</span></a>
+        <a href="#"><i class="fab fa-php"></i><span>PHP</span></a>
+        <a href="#"><i class="fab fa-bootstrap"></i><span>Bootstrap</span></a>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3 class="title">
+        Are you interested to become a tutor at Innovatech CodingHub?
+      </h3>
+      <p class="tutor">
+        Innovatech CodingHub's aim is perfectly aligned with the professionalism
+        and we would value your skills in this area of expertise.
+      </p>
+      <a href="./register.html" class="inline-btn">get started</a>
+    </div>
+  </div>
+</section>
+<section class="courses">
+  <h1 class="heading">Innovatech CodingHub courses</h1>
+
+  <div class="box-container">
+    {% for course in courses %}
+    <div class="box">
+      <div class="tutor">
+        <img src="{{course.course_tutor.profile_pic}}" alt="" />
+        <div class="info">
+          <h3>{{course.course_tutor}}</h3>
+          <span>{{course.created_at}}</span>
+        </div>
+      </div>
+      <div class="thumb">
+        <img src="{{course.course_image}}" alt="" />
+        <span>{{course.materials.all|length}} Videos</span>
+      </div>
+      <h3 class="title">{{course.course_name}}</h3>
+      <a href="{% url 'playlist' course.id %}" class="inline-btn">view playlist</a>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <div class="more-btn">
+    <a href="courses.html" class="inline-option-btn">view all courses</a>
+  </div>
+</section>
+{% endblock %}
